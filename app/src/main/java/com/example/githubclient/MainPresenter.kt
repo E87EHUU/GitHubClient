@@ -1,22 +1,14 @@
 package com.example.githubclient
 
 class MainPresenter(val view : MainView) {
-    val model = CountersModel()
-
-    fun counterClick(id: Int) {
-        when(id) {
-            R.id.btn_counter1 -> {
-                val nextValue = model.next(0)
-                view.setButtonText(0, nextValue.toString())
-            }
-            R.id.btn_counter2 -> {
-                val nextValue = model.next(1)
-                view.setButtonText(1, nextValue.toString())
-            }
-            R.id.btn_counter3 -> {
-                val nextValue = model.next(2)
-                view.setButtonText(2, nextValue.toString())
-            }
-        }
+    private val model = CountersModel()
+    fun onFirstBtnClicked() {
+        view.setDigitOne(model.next(0).toString())
+    }
+    fun onSecondBtnClicked() {
+        view.setDigitTwo(model.next(1).toString())
+    }
+    fun onThirdBtnClicked() {
+        view.setDigitThree(model.next(2).toString())
     }
 }

@@ -1,5 +1,7 @@
 package com.example.githubclient
 
 interface MainView {
-    fun setButtonText(index: Int, text: String)
+    fun setDigitOne(counter: String)
+    fun setDigitTwo(counter: String)
+    fun setDigitThree(counter: String)
 }
