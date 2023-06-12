@@ -7,7 +7,7 @@ import com.example.githubclient.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), MainView {
 
-    private var vb: ActivityMainBinding? = null
+    private lateinit var vb: ActivityMainBinding
     var presenter = MainPresenter(this)
 
 
@@ -15,34 +15,34 @@ class MainActivity : AppCompatActivity(), MainView {
         super.onCreate(savedInstanceState)
 
         vb = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(vb?.root)
+        setContentView(vb.root)
 
         initPresenter()
         initClicks()
     }
 
  private fun initClicks() = with(vb){
-     this!!.btnCounter1.setOnClickListener {
+     this.btnCounter1.setOnClickListener {
         presenter.onFirstBtnClicked()
      }
-     this!!.btnCounter2.setOnClickListener {
+     this.btnCounter2.setOnClickListener {
          presenter.onSecondBtnClicked()
      }
-     this!!.btnCounter3.setOnClickListener {
+     this.btnCounter3.setOnClickListener {
          presenter.onThirdBtnClicked()
      }
  }
 
     override fun setDigitOne(counter: String) {
-        vb?.btnCounter1?.text = counter
+        vb.btnCounter1.text = counter
     }
 
     override fun setDigitTwo(counter: String) {
-        vb?.btnCounter2?.text = counter
+        vb.btnCounter2.text = counter
     }
 
     override fun setDigitThree(counter: String) {
-        vb?.btnCounter3?.text = counter
+        vb.btnCounter3.text = counter
     }
 
     private fun initPresenter() {
