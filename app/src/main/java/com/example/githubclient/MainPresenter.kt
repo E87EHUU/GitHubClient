@@ -1,17 +1,18 @@
 package com.example.githubclient
 
-class MainPresenter(val view : MainView) {
-    private val model = CountersModel()
+import moxy.MvpPresenter
+
+class MainPresenter(private val model: CountersModel) : MvpPresenter<MainView>() {
 
     fun onFirstBtnClicked() {
-        view.setDigitOne(model.next(0).toString())
+        viewState.setDigitOne(model.next(0).toString())
     }
 
     fun onSecondBtnClicked() {
-        view.setDigitTwo(model.next(1).toString())
+        viewState.setDigitTwo(model.next(1).toString())
     }
 
     fun onThirdBtnClicked() {
-        view.setDigitThree(model.next(2).toString())
+        viewState.setDigitThree(model.next(2).toString())
     }
 }

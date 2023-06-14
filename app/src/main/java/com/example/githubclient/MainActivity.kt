@@ -1,15 +1,14 @@
 package com.example.githubclient
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import com.example.githubclient.databinding.ActivityMainBinding
+import moxy.MvpAppCompatActivity
+import moxy.ktx.moxyPresenter
 
-class MainActivity : AppCompatActivity(), MainView {
+class MainActivity : MvpAppCompatActivity(), MainView {
 
     private lateinit var vb: ActivityMainBinding
-    var presenter = MainPresenter(this)
-
+    private val presenter by moxyPresenter { MainPresenter(CountersModel()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,7 +16,6 @@ class MainActivity : AppCompatActivity(), MainView {
         vb = ActivityMainBinding.inflate(layoutInflater)
         setContentView(vb.root)
 
-        initPresenter()
         initClicks()
     }
 
@@ -43,10 +41,6 @@ class MainActivity : AppCompatActivity(), MainView {
 
     override fun setDigitThree(counter: String) {
         vb.btnCounter3.text = counter
-    }
-
-    private fun initPresenter() {
-        presenter = MainPresenter(this)
     }
 }
 
