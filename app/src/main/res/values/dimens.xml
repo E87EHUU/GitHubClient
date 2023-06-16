@@ -2,4 +2,5 @@
 <resources>
     <dimen name="itemuserTextviewLayoutMarginStart">16dp</dimen>
     <dimen name="ItemuserLinearlayoutHeight">50dp</dimen>
+    <dimen name="FragmentdetailsTextviewLayoutMargin">16dp</dimen>
 </resources>

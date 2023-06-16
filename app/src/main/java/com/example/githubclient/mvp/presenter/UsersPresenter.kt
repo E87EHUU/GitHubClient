@@ -4,6 +4,7 @@ import com.example.githubclient.mvp.view.UsersView
 
 import com.example.githubclient.mvp.model.GithubUser
 import com.example.githubclient.mvp.model.RepositoryImpl
+import com.example.githubclient.mvp.navigation.Screens
 import com.example.githubclient.mvp.presenter.list.IUserListPresenter
 import com.example.githubclient.mvp.view.list.IUserItemView
 import com.github.terrakok.cicerone.Router
@@ -32,8 +33,8 @@ class UsersPresenter(private val repositoryImpl: RepositoryImpl, private val rou
         super.onFirstViewAttach()
         viewState.init()
         loadData()
-        usersListPresenter.itemClickListener = { itemView ->
-            //TODO
+        usersListPresenter.itemClickListener = {
+            router.navigateTo(Screens.details(usersListPresenter.users[it.pos]))
         }
     }
 
