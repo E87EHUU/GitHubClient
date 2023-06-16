@@ -1,4 +1,4 @@
-package com.example.githubclient
+package com.example.githubclient.mvp.model
 
 class CountersModel {
 
@@ -8,7 +8,7 @@ class CountersModel {
 
     private val counters = mutableListOf(firstCount, secondCount, thirdCount)
 
-    fun getCurrent(index: Int) : Int {
+    private fun getCurrent(index: Int) : Int {
         return counters[index]
     }
 
