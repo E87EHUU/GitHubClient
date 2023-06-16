@@ -1,4 +1,4 @@
-package com.example.githubclient.ui
+package com.example.githubclient.ui.activity
 
 import android.os.Bundle
 import com.example.githubclient.App
