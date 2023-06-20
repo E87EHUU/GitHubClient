@@ -10,6 +10,7 @@ import com.example.githubclient.mvp.presenter.MainPresenter
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import moxy.MvpAppCompatActivity
 import moxy.ktx.moxyPresenter
+import java.util.Observable
 
 class MainActivity : MvpAppCompatActivity(), MainView {
 

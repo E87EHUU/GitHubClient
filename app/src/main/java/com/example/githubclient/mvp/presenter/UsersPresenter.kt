@@ -1,5 +1,6 @@
 package com.example.githubclient.mvp.presenter
 
+import android.util.Log
 import com.example.githubclient.mvp.view.UsersView
 
 import com.example.githubclient.mvp.model.GithubUser
@@ -9,12 +10,14 @@ import com.example.githubclient.mvp.presenter.list.IUserListPresenter
 import com.example.githubclient.mvp.view.list.IUserItemView
 import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
+import io.reactivex.rxjava3.disposables.Disposable
 
 class UsersPresenter(private val repositoryImpl: RepositoryImpl, private val router: Router) :
     MvpPresenter<UsersView>() {
 
-    class UserListPresenter : IUserListPresenter {
+    private var disposable: Disposable? = null
 
+    class UserListPresenter : IUserListPresenter {
         val users = mutableListOf<GithubUser>()
 
         override var itemClickListener: ((IUserItemView) -> Unit)? = null
@@ -39,15 +42,21 @@ class UsersPresenter(private val repositoryImpl: RepositoryImpl, private val rou
     }
 
     private fun loadData() {
-        val users = repositoryImpl.getUsers()
-
-        usersListPresenter.users.addAll(users)
-
-        viewState.updateList()
+        disposable = repositoryImpl.getUsers().subscribe({
+            usersListPresenter.users.add(it)
+            viewState.updateList()
+        }, {
+            Log.e("@@@", "error while loadData()")
+        })
     }
 
     fun onBackPressed(): Boolean {
         router.exit()
         return true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable?.dispose()
     }
 }
