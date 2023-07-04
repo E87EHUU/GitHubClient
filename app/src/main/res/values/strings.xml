@@ -5,4 +5,5 @@
     <string name="counter_two">Счетчик 2</string>
     <string name="counter_three">Счетчик 3</string>
     <string name="_0">0</string>
+    <string name="text">Login</string>
 </resources>
