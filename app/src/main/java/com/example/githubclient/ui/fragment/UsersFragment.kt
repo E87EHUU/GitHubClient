@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import com.example.githubclient.App
 import com.example.githubclient.databinding.FragmentUsersBinding
 import com.example.githubclient.mvp.model.RepositoryImpl
+import com.example.githubclient.mvp.model.api.ApiHolder
 import com.example.githubclient.mvp.navigation.BackPressedListener
 import com.example.githubclient.mvp.presenter.UsersPresenter
 import com.example.githubclient.mvp.view.UsersView
@@ -21,7 +23,14 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackPressedListener {
     private var _viewBinding: FragmentUsersBinding? = null
     private val viewBinding get() = _viewBinding!!
 
-    private val presenter by moxyPresenter { UsersPresenter(RepositoryImpl(), App.instance.router) }
+    private val presenter by moxyPresenter {
+        UsersPresenter(
+            RepositoryImpl(ApiHolder.api),
+            App.instance.router,
+            AndroidSchedulers.mainThread()
+        )
+    }
+
     private var adapter: UsersRVAdapter? = null
 
     override fun onCreateView(

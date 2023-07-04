@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.githubclient.App
 import com.example.githubclient.databinding.FragmentDetailsBinding
-import com.example.githubclient.mvp.model.GithubUser
+import com.example.githubclient.mvp.model.entity.GithubUser
 import com.example.githubclient.mvp.navigation.BackPressedListener
 import com.example.githubclient.mvp.presenter.DetailsPresenter
 import com.example.githubclient.mvp.view.DetailsView

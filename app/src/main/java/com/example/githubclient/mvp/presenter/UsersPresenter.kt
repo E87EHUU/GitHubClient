@@ -2,8 +2,9 @@ package com.example.githubclient.mvp.presenter
 
 import android.util.Log
 import com.example.githubclient.mvp.view.UsersView
+import io.reactivex.rxjava3.core.Scheduler
 
-import com.example.githubclient.mvp.model.GithubUser
+import com.example.githubclient.mvp.model.entity.GithubUser
 import com.example.githubclient.mvp.model.RepositoryImpl
 import com.example.githubclient.mvp.navigation.Screens
 import com.example.githubclient.mvp.presenter.list.IUserListPresenter
@@ -12,7 +13,11 @@ import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
 import io.reactivex.rxjava3.disposables.Disposable
 
-class UsersPresenter(private val repositoryImpl: RepositoryImpl, private val router: Router) :
+class UsersPresenter(
+    private val repositoryImpl: RepositoryImpl,
+    private val router: Router,
+    private val uiScheduler: Scheduler
+) :
     MvpPresenter<UsersView>() {
 
     private var disposable: Disposable? = null
@@ -42,12 +47,13 @@ class UsersPresenter(private val repositoryImpl: RepositoryImpl, private val rou
     }
 
     private fun loadData() {
-        disposable = repositoryImpl.getUsers().subscribe({
-            usersListPresenter.users.add(it)
-            viewState.updateList()
-        }, {
-            Log.e("@@@", "error while loadData()")
-        })
+        disposable = repositoryImpl.getUsers().observeOn(uiScheduler)
+            .subscribe({
+                usersListPresenter.users.addAll(it)
+                viewState.updateList()
+            }, {
+                Log.e("@@@", "Something went wrong")
+            })
     }
 
     fun onBackPressed(): Boolean {
