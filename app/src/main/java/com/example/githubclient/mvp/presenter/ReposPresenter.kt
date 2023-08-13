@@ -3,6 +3,7 @@ package com.example.githubclient.mvp.presenter
 import android.util.Log
 import com.example.githubclient.mvp.model.entity.GithubUser
 import com.example.githubclient.mvp.model.entity.GithubUserRepos
+import com.example.githubclient.mvp.navigation.IScreens
 import com.example.githubclient.mvp.presenter.list.IReposListPresenter
 import com.example.githubclient.mvp.repository.RepositoryGithubUserReposImpl
 import com.example.githubclient.mvp.view.ReposView
@@ -17,7 +18,8 @@ class ReposPresenter(
     private val user: GithubUser?,
     private val router: Router,
     private val repositoryGithubUserReposImpl: RepositoryGithubUserReposImpl,
-    private val uiScheduler: Scheduler
+    private val uiScheduler: Scheduler,
+    private val screen: IScreens
 ) :
     MvpPresenter<ReposView>() {
 
@@ -45,6 +47,10 @@ class ReposPresenter(
         loadData()
 
         user?.let { viewState.init(it) }
+
+        reposListPresenter.itemClickListener = {
+            router.navigateTo(screen.forks(reposListPresenter.repos[it.pos]))
+        }
     }
 
     private fun loadData() {

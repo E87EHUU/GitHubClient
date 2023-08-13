@@ -10,14 +10,17 @@ import com.example.githubclient.mvp.presenter.MainPresenter
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import moxy.MvpAppCompatActivity
 import moxy.ktx.moxyPresenter
-import java.util.Observable
 
 class MainActivity : MvpAppCompatActivity(), MainView {
 
     private val navigator = AppNavigator(this, R.id.container)
     private var vb: ActivityMainBinding? = null
 
-    private val presenter by moxyPresenter {MainPresenter(App.instance.router) }
+    private val presenter by moxyPresenter {
+
+        MainPresenter(
+            App.instance.router,
+            App.instance.screens) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

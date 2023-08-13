@@ -5,6 +5,7 @@ import com.example.githubclient.mvp.view.UsersView
 import io.reactivex.rxjava3.core.Scheduler
 
 import com.example.githubclient.mvp.model.entity.GithubUser
+import com.example.githubclient.mvp.navigation.IScreens
 import com.example.githubclient.mvp.navigation.Screens
 import com.example.githubclient.mvp.presenter.list.IUserListPresenter
 import com.example.githubclient.mvp.repository.RepositoryGithubUserImpl
@@ -17,7 +18,8 @@ import moxy.MvpPresenter
 class UsersPresenter(
     private val repositoryGithubUserReposImpl: RepositoryGithubUserImpl,
     private val router: Router,
-    private val uiScheduler: Scheduler
+    private val uiScheduler: Scheduler,
+    private val screen: IScreens
 ) :
     MvpPresenter<UsersView>() {
 
@@ -44,7 +46,7 @@ class UsersPresenter(
         viewState.init()
         loadData()
         usersListPresenter.itemClickListener = {
-            router.navigateTo(Screens.details(usersListPresenter.users[it.pos]))
+            router.navigateTo(screen.details(usersListPresenter.users[it.pos]))
         }
     }
 

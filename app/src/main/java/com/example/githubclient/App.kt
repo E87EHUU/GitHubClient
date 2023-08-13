@@ -4,6 +4,8 @@ import android.app.Application
 import com.example.githubclient.ui.network.ConnectivityListener
 import com.example.githubclient.mvp.model.database.AppDatabase
 import com.example.githubclient.mvp.model.network.INetworkStatus
+import com.example.githubclient.mvp.navigation.IScreens
+import com.example.githubclient.mvp.navigation.Screens
 import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.Router
 
@@ -19,6 +21,8 @@ class App : Application() {
     }
     val router get() = cicerone.router
     val navigatorHolder get() = cicerone.getNavigatorHolder()
+
+    val screens: IScreens = Screens()
 
     override fun onCreate() {
         super.onCreate()
