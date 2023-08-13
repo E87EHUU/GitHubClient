@@ -1,26 +1,27 @@
 package com.example.githubclient.mvp.presenter
 
 import android.util.Log
-import com.example.githubclient.mvp.model.RepositoryImpl
 import com.example.githubclient.mvp.model.entity.GithubUser
 import com.example.githubclient.mvp.model.entity.GithubUserRepos
 import com.example.githubclient.mvp.presenter.list.IReposListPresenter
+import com.example.githubclient.mvp.repository.RepositoryGithubUserReposImpl
 import com.example.githubclient.mvp.view.ReposView
 import com.example.githubclient.mvp.view.list.IReposItemView
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.core.Scheduler
-import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
+import com.example.githubclient.utils.disposeBy
 
 class ReposPresenter(
     private val user: GithubUser?,
     private val router: Router,
-    private val repositoryImpl: RepositoryImpl,
+    private val repositoryGithubUserReposImpl: RepositoryGithubUserReposImpl,
     private val uiScheduler: Scheduler
 ) :
     MvpPresenter<ReposView>() {
 
-    private var disposable: Disposable? = null
+    private var bag = CompositeDisposable()
 
     class ReposListPresenter : IReposListPresenter {
 
@@ -48,15 +49,15 @@ class ReposPresenter(
 
     private fun loadData() {
 
-        disposable = user?.reposUrl?.let { reposUrl ->
-            repositoryImpl.getRepos(reposUrl)
+        user?.let { user ->
+            repositoryGithubUserReposImpl.getRepos(user)
                 .observeOn(uiScheduler)
-                .subscribe({
-                    reposListPresenter.repos.addAll(it)
+                .subscribe({ repos ->
+                    reposListPresenter.repos.addAll(repos)
                     viewState.updateList()
                 }, {
                     Log.e("@@@", "Repo Something went wrong")
-                })
+                }).disposeBy(bag)
         }
     }
 
@@ -67,6 +68,6 @@ class ReposPresenter(
 
     override fun onDestroy() {
         super.onDestroy()
-        disposable?.dispose()
+        bag.dispose()
     }
 }

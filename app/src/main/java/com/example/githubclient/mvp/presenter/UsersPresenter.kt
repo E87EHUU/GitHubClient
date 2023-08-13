@@ -5,22 +5,23 @@ import com.example.githubclient.mvp.view.UsersView
 import io.reactivex.rxjava3.core.Scheduler
 
 import com.example.githubclient.mvp.model.entity.GithubUser
-import com.example.githubclient.mvp.model.RepositoryImpl
 import com.example.githubclient.mvp.navigation.Screens
 import com.example.githubclient.mvp.presenter.list.IUserListPresenter
+import com.example.githubclient.mvp.repository.RepositoryGithubUserImpl
 import com.example.githubclient.mvp.view.list.IUserItemView
+import com.example.githubclient.utils.disposeBy
 import com.github.terrakok.cicerone.Router
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
-import io.reactivex.rxjava3.disposables.Disposable
 
 class UsersPresenter(
-    private val repositoryImpl: RepositoryImpl,
+    private val repositoryGithubUserReposImpl: RepositoryGithubUserImpl,
     private val router: Router,
     private val uiScheduler: Scheduler
 ) :
     MvpPresenter<UsersView>() {
 
-    private var disposable: Disposable? = null
+    private var bag = CompositeDisposable()
 
     class UserListPresenter : IUserListPresenter {
         val users = mutableListOf<GithubUser>()
@@ -48,13 +49,13 @@ class UsersPresenter(
     }
 
     private fun loadData() {
-        disposable = repositoryImpl.getUsers().observeOn(uiScheduler)
+        repositoryGithubUserReposImpl.getUsers().observeOn(uiScheduler)
             .subscribe({
                 usersListPresenter.users.addAll(it)
                 viewState.updateList()
             }, {
                 Log.e("@@@", "Something went wrong")
-            })
+            }).disposeBy(bag)
     }
 
     fun onBackPressed(): Boolean {
@@ -64,6 +65,6 @@ class UsersPresenter(
 
     override fun onDestroy() {
         super.onDestroy()
-        disposable?.dispose()
+        bag.dispose()
     }
 }

@@ -9,10 +9,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import com.example.githubclient.App
 import com.example.githubclient.databinding.FragmentUsersBinding
-import com.example.githubclient.mvp.model.RepositoryImpl
 import com.example.githubclient.mvp.model.api.ApiHolder
+import com.example.githubclient.mvp.model.cache.UserCacheImpl
+import com.example.githubclient.mvp.model.database.AppDatabase
 import com.example.githubclient.mvp.navigation.BackPressedListener
 import com.example.githubclient.mvp.presenter.UsersPresenter
+import com.example.githubclient.mvp.repository.RepositoryGithubUserImpl
 import com.example.githubclient.mvp.view.UsersView
 import com.example.githubclient.ui.adapter.UsersRVAdapter
 import com.example.githubclient.ui.image.GlideImageLoader
@@ -26,7 +28,11 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackPressedListener {
 
     private val presenter by moxyPresenter {
         UsersPresenter(
-            RepositoryImpl(ApiHolder.api),
+            RepositoryGithubUserImpl(
+                ApiHolder.api,
+                App.networkStatus,
+                UserCacheImpl(AppDatabase.getInstance())
+            ),
             App.instance.router,
             AndroidSchedulers.mainThread()
         )

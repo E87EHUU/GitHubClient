@@ -8,11 +8,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubclient.App
 import com.example.githubclient.databinding.FragmentReposBinding
-import com.example.githubclient.mvp.model.RepositoryImpl
 import com.example.githubclient.mvp.model.api.ApiHolder
+import com.example.githubclient.mvp.model.cache.ReposCacheImpl
+import com.example.githubclient.mvp.model.database.AppDatabase
 import com.example.githubclient.mvp.model.entity.GithubUser
 import com.example.githubclient.mvp.navigation.BackPressedListener
 import com.example.githubclient.mvp.presenter.ReposPresenter
+import com.example.githubclient.mvp.repository.RepositoryGithubUserReposImpl
 import com.example.githubclient.mvp.view.ReposView
 import com.example.githubclient.ui.adapter.ReposRVAdapter
 import com.example.githubclient.ui.image.GlideImageLoader
@@ -30,7 +32,11 @@ class ReposFragment : MvpAppCompatFragment(), ReposView, BackPressedListener {
         ReposPresenter(
             user,
             App.instance.router,
-            RepositoryImpl(ApiHolder.api),
+            RepositoryGithubUserReposImpl(
+                ApiHolder.api,
+                App.networkStatus,
+                ReposCacheImpl(AppDatabase.getInstance())
+            ),
             AndroidSchedulers.mainThread()
         )
     }
