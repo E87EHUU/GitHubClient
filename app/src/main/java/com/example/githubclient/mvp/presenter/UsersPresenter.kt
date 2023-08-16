@@ -6,22 +6,28 @@ import io.reactivex.rxjava3.core.Scheduler
 
 import com.example.githubclient.mvp.model.entity.GithubUser
 import com.example.githubclient.mvp.navigation.IScreens
-import com.example.githubclient.mvp.navigation.Screens
 import com.example.githubclient.mvp.presenter.list.IUserListPresenter
-import com.example.githubclient.mvp.repository.RepositoryGithubUserImpl
+import com.example.githubclient.mvp.repository.IRepositoryGithubUser
 import com.example.githubclient.mvp.view.list.IUserItemView
 import com.example.githubclient.utils.disposeBy
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
+import javax.inject.Inject
 
-class UsersPresenter(
-    private val repositoryGithubUserReposImpl: RepositoryGithubUserImpl,
-    private val router: Router,
-    private val uiScheduler: Scheduler,
-    private val screen: IScreens
-) :
-    MvpPresenter<UsersView>() {
+class UsersPresenter : MvpPresenter<UsersView>() {
+
+    @Inject
+    lateinit var repositoryGithubUserReposImpl: IRepositoryGithubUser
+
+    @Inject
+    lateinit var router: Router
+
+    @Inject
+    lateinit var uiScheduler: Scheduler
+
+    @Inject
+    lateinit var screen: IScreens
 
     private var bag = CompositeDisposable()
 

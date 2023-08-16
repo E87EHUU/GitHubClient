@@ -20,14 +20,5 @@ abstract class AppDatabase : RoomDatabase() {
 
     companion object {
         const val DB_NAME = "github.db"
-        private var instance: AppDatabase? = null
-
-        fun getInstance() = instance ?: throw RuntimeException("Database wasn't created")
-
-        fun create(context: Context) {
-            if (instance == null) {
-                instance = Room.databaseBuilder(context,AppDatabase::class.java, DB_NAME).build()
-            }
-        }
     }
 }

@@ -5,7 +5,7 @@ import com.example.githubclient.mvp.model.entity.GithubUser
 import com.example.githubclient.mvp.model.entity.GithubUserRepos
 import com.example.githubclient.mvp.navigation.IScreens
 import com.example.githubclient.mvp.presenter.list.IReposListPresenter
-import com.example.githubclient.mvp.repository.RepositoryGithubUserReposImpl
+import com.example.githubclient.mvp.repository.IRepositoryGithubUserRepos
 import com.example.githubclient.mvp.view.ReposView
 import com.example.githubclient.mvp.view.list.IReposItemView
 import com.github.terrakok.cicerone.Router
@@ -13,15 +13,21 @@ import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
 import com.example.githubclient.utils.disposeBy
+import javax.inject.Inject
 
-class ReposPresenter(
-    private val user: GithubUser?,
-    private val router: Router,
-    private val repositoryGithubUserReposImpl: RepositoryGithubUserReposImpl,
-    private val uiScheduler: Scheduler,
-    private val screen: IScreens
-) :
-    MvpPresenter<ReposView>() {
+class ReposPresenter(private val user: GithubUser?) : MvpPresenter<ReposView>() {
+
+    @Inject
+    lateinit var router: Router
+
+    @Inject
+    lateinit var repositoryGithubUserReposImpl: IRepositoryGithubUserRepos
+
+    @Inject
+    lateinit var uiScheduler: Scheduler
+
+    @Inject
+    lateinit var screen: IScreens
 
     private var bag = CompositeDisposable()
 
@@ -42,7 +48,10 @@ class ReposPresenter(
     val reposListPresenter = ReposListPresenter()
 
     override fun onFirstViewAttach() {
+
         super.onFirstViewAttach()
+
+        user?.let {viewState.loadAvatarAndLogin(it) }
 
         loadData()
 
@@ -55,8 +64,8 @@ class ReposPresenter(
 
     private fun loadData() {
 
-        user?.let { user ->
-            repositoryGithubUserReposImpl.getRepos(user)
+        user?.let {
+            repositoryGithubUserReposImpl.getRepos(it)
                 .observeOn(uiScheduler)
                 .subscribe({ repos ->
                     reposListPresenter.repos.addAll(repos)

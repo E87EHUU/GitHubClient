@@ -5,11 +5,15 @@ import com.example.githubclient.mvp.view.MainView
 import com.example.githubclient.mvp.navigation.Screens
 import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
+import javax.inject.Inject
 
-class MainPresenter(
-    private val router: Router,
-    private val screen: IScreens
-) : MvpPresenter<MainView>() {
+class MainPresenter : MvpPresenter<MainView>() {
+
+    @Inject
+    lateinit var router: Router
+
+    @Inject
+    lateinit var screen: IScreens
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()

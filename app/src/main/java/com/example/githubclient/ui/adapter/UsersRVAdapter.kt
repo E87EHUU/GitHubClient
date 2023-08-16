@@ -9,12 +9,15 @@ import com.example.githubclient.mvp.presenter.list.IUserListPresenter
 import com.example.githubclient.mvp.view.IImageLoader
 import com.example.githubclient.mvp.view.list.IUserItemView
 import com.example.githubclient.utils.RV_INVALID_INDEX
+import javax.inject.Inject
 
 class UsersRVAdapter(
-    private val presenter: IUserListPresenter,
-    private val imageLoader: IImageLoader<ImageView>
+    private val presenter: IUserListPresenter
     ) :
     RecyclerView.Adapter<UsersRVAdapter.ViewHolder>() {
+
+    @Inject
+    lateinit var imageLoader: IImageLoader<ImageView>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(

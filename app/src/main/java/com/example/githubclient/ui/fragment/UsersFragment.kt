@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import com.example.githubclient.App
 import com.example.githubclient.databinding.FragmentUsersBinding
-import com.example.githubclient.mvp.model.api.ApiHolder
 import com.example.githubclient.mvp.model.cache.UserCacheImpl
 import com.example.githubclient.mvp.model.database.AppDatabase
 import com.example.githubclient.mvp.navigation.BackPressedListener
@@ -27,16 +26,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackPressedListener {
     private val viewBinding get() = _viewBinding!!
 
     private val presenter by moxyPresenter {
-        UsersPresenter(
-            RepositoryGithubUserImpl(
-                ApiHolder.api,
-                App.networkStatus,
-                UserCacheImpl(AppDatabase.getInstance())
-            ),
-            App.instance.router,
-            AndroidSchedulers.mainThread(),
-            App.instance.screens
-        )
+        UsersPresenter().apply { App.instance.appComponent.inject(this) }
     }
 
     private var adapter: UsersRVAdapter? = null
@@ -54,7 +44,9 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackPressedListener {
 
     override fun init() {
         viewBinding.rvUsers.layoutManager = LinearLayoutManager(context)
-        adapter = UsersRVAdapter(presenter.usersListPresenter, GlideImageLoader())
+        adapter = UsersRVAdapter(presenter.usersListPresenter).apply {
+            App.instance.appComponent.inject(this)
+        }
         viewBinding.rvUsers.adapter = adapter
     }
 
