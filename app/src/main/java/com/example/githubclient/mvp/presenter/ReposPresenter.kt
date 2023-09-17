@@ -1,6 +1,7 @@
 package com.example.githubclient.mvp.presenter
 
 import android.util.Log
+import com.example.githubclient.di.repos.IReposScopeContainer
 import com.example.githubclient.mvp.model.entity.GithubUser
 import com.example.githubclient.mvp.model.entity.GithubUserRepos
 import com.example.githubclient.mvp.navigation.IScreens
@@ -29,7 +30,10 @@ class ReposPresenter(private val user: GithubUser?) : MvpPresenter<ReposView>() 
     @Inject
     lateinit var screen: IScreens
 
-    private var bag = CompositeDisposable()
+    @Inject
+    lateinit var reposScopeModule: IReposScopeContainer
+
+    private var disposable = CompositeDisposable()
 
     class ReposListPresenter : IReposListPresenter {
 
@@ -72,7 +76,7 @@ class ReposPresenter(private val user: GithubUser?) : MvpPresenter<ReposView>() 
                     viewState.updateList()
                 }, {
                     Log.e("@@@", "Repo Something went wrong")
-                }).disposeBy(bag)
+                }).disposeBy(disposable)
         }
     }
 
@@ -83,6 +87,6 @@ class ReposPresenter(private val user: GithubUser?) : MvpPresenter<ReposView>() 
 
     override fun onDestroy() {
         super.onDestroy()
-        bag.dispose()
+        disposable.dispose()
     }
 }

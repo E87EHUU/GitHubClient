@@ -1,6 +1,7 @@
 package com.example.githubclient.mvp.presenter
 
 import android.util.Log
+import com.example.githubclient.di.users.IUsersScopeContainer
 import com.example.githubclient.mvp.view.UsersView
 import io.reactivex.rxjava3.core.Scheduler
 
@@ -29,7 +30,10 @@ class UsersPresenter : MvpPresenter<UsersView>() {
     @Inject
     lateinit var screen: IScreens
 
-    private var bag = CompositeDisposable()
+    @Inject
+    lateinit var usersScopeContainer: IUsersScopeContainer
+
+    private var disposable = CompositeDisposable()
 
     class UserListPresenter : IUserListPresenter {
         val users = mutableListOf<GithubUser>()
@@ -63,7 +67,7 @@ class UsersPresenter : MvpPresenter<UsersView>() {
                 viewState.updateList()
             }, {
                 Log.e("@@@", "Something went wrong")
-            }).disposeBy(bag)
+            }).disposeBy(disposable )
     }
 
     fun onBackPressed(): Boolean {
@@ -73,6 +77,6 @@ class UsersPresenter : MvpPresenter<UsersView>() {
 
     override fun onDestroy() {
         super.onDestroy()
-        bag.dispose()
+        disposable.dispose()
     }
 }
